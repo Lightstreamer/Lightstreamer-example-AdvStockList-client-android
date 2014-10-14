@@ -1,0 +1,8 @@
+.project
+.metadata
+bin/
+gen/
+.classpath
+.settings/
+libs/*.jar
+project.protperties
