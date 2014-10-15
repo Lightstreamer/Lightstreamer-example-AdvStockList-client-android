@@ -26,7 +26,7 @@ This app uses the <b>Android Client API for Lightstreamer</b> to handle the comm
 
 Touch a row opens a new panel with the detailed information, updated in real-time, of the stock.
 
-### Dig the code
+### Dig the Code
 
 * `StockListDemo.java` is the entry point and only `Activity` of the application. It contains two `Fragment`s, the status of
 the application, and acts as a proxy to the LightstreamerClient instance. The two `Fragment` are both visible if the application
