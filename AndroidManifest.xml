@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lightstreamer.simple_demo.android"
-    android:versionCode="2"
+    android:versionCode="3"
     android:versionName="1.0" >
 
     <!-- The targetSdkVersion is optional, but it's always a good practice
          to target higher versions. -->
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="21" />
     <!--  who does not need internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
        
