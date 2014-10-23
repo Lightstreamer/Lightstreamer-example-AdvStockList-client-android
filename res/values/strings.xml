@@ -38,6 +38,7 @@
     <string name="open_price">Open</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
+    <string name="lightstreamer">Lightstreamer</string>
 
     <string name="host">http://10.0.2.2:8080</string>
     
