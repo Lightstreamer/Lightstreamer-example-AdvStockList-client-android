@@ -24,7 +24,7 @@
         www.lightstreamer.com</string>
     <string name="about_plot">Live charts are plotted using androidplot androidplot.com</string>
     <string name="about_mpn">An extended version of this demo, supporting mobile push notifications, is also avalable, 
-	see play.google.com/store/apps/details?id=com.lightstreamer.demo.android</string>
+	see play.google.com/store/apps/details?id=com.lightstreamer.simple_demo.android</string>
 
     
 </resources>

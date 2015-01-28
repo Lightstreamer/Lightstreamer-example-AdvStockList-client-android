@@ -49,13 +49,13 @@
             android:contentDescription="@string/status_disconnected"
         />
     
-        <fragment android:name="com.lightstreamer.demo.android.StocksFragment"
+        <fragment android:name="com.lightstreamer.simple_demo.android.StocksFragment"
                   android:id="@+id/stocks_fragment"
                   android:layout_weight="1"
                   android:layout_width="0dp"
                   android:layout_height="match_parent" />
     
-        <fragment android:name="com.lightstreamer.demo.android.DetailsFragment"
+        <fragment android:name="com.lightstreamer.simple_demo.android.DetailsFragment"
                   android:id="@+id/details_fragment"
                   android:layout_weight="2"
                   android:layout_width="0dp"
