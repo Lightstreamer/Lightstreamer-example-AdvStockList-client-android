@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Weswit Srl
+ * Copyright 2015 Weswit Srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
@@ -32,6 +33,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.lightstreamer.client.ItemUpdate;
+import com.lightstreamer.client.Subscription;
 
 public class Chart extends SimpleSubscriptionListener {
     
@@ -42,15 +44,20 @@ public class Chart extends SimpleSubscriptionListener {
     
     double maxY = 0; 
     double minY = 0;
+    private Handler handler;
     
     private final static int MAX_SERIES_SIZE = 40;
     
-    public Chart() {
+    public Chart(XYPlot dynamicPlot,Handler handler) {
     	super("Chart");
         this.series = new Series();
+        
+        this.handler = handler;
+        
+        this.setPlot(dynamicPlot);
     }
 
-    public void setPlot(final XYPlot dynamicPlot) {
+    private void setPlot(final XYPlot dynamicPlot) {
         if (this.dynamicPlot != dynamicPlot) {
             this.dynamicPlot = dynamicPlot;
             dynamicPlot.setDomainStep(XYStepMode.SUBDIVIDE, 4);
@@ -84,18 +91,27 @@ public class Chart extends SimpleSubscriptionListener {
         this.dynamicPlot.removeSeries(series);
     }
     
-    public void addPoint(String time,String lastPrice) {
+    @Override
+    public void onListenStart(Subscription sub) {
+        super.onListenStart(sub);
+        this.clean(); 
+    }
+    
+    @Override
+    public void onItemUpdate(ItemUpdate update) {
+    	super.onItemUpdate(update);
+    
+    	String lastPrice = update.getValue("last_price");
+        String time = update.getValue("time");
+        this.addPoint(time,lastPrice);
+    }
+    
+    private void addPoint(String time,String lastPrice) {
         series.add(time,lastPrice);
         this.redraw();
     }
     
-    public void addPoint(ItemUpdate newData) {
-        String lastPrice = newData.getValue("last_price");
-        String time = newData.getValue("time");
-        this.addPoint(time,lastPrice);
-    }
-    
-    public void clean() {
+    private void clean() {
         this.series.reset();
         maxY = 0;
         minY = 0;
@@ -103,10 +119,7 @@ public class Chart extends SimpleSubscriptionListener {
     }
     
     private void redraw() {
-        if (this.dynamicPlot != null) {
-            dynamicPlot.setRangeBoundaries(minY, maxY, BoundaryMode.FIXED);
-            this.dynamicPlot.redraw();
-        }
+    	handler.post(new RedrawRunnable());
     }
     
     private void onYOverflow(double last) {
@@ -136,6 +149,18 @@ public class Chart extends SimpleSubscriptionListener {
             minY = 0;
         }
         maxY = newPrice+1;
+    }
+    
+    private class RedrawRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            if (dynamicPlot != null) {
+                dynamicPlot.setRangeBoundaries(minY, maxY, BoundaryMode.FIXED);
+                dynamicPlot.redraw();
+            }
+        }
+    	
     }
 
     private class Series implements XYSeries {

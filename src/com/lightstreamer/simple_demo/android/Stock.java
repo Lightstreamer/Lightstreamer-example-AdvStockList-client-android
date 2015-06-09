@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Weswit Srl
+ * Copyright 2015 Weswit Srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,24 +34,17 @@ public class Stock extends SimpleSubscriptionListener {
 
     private String[] numericFields;
     private String[] otherFields;
-    private Chart chart;
     
-	private Handler handler;
-	private Subscription sub;
+        private Handler handler;
+        private Subscription sub;
 
     
     public Stock(String[] numericFields, String[] otherFields, Handler handler, HashMap<String,TextView> holder) {
-    	super("Stock");
+        super("Stock");
         this.numericFields = numericFields;
         this.otherFields = otherFields;
         this.handler = handler;
         this.holder = holder;
-    }
-    
-    
-    public void setChart(Chart chart) { //UI thread
-        this.chart = chart;
-        this.chart.clean();
     }
     
     @Override
@@ -74,8 +67,6 @@ public class Stock extends SimpleSubscriptionListener {
     	super.onItemUpdate(update);
     	this.updateView(update, numericFields, true);
         this.updateView(update, otherFields, false);
-        
-        chart.addPoint(update);
     }
     
     private void updateView(ItemUpdate newData, String[] fields, boolean numeric) {

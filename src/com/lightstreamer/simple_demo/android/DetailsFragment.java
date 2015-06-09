@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Weswit Srl
+ * Copyright 2015 Weswit Srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class DetailsFragment extends Fragment {
     private final SubscriptionFragment subscriptionHandling = new SubscriptionFragment();
     private Handler handler;
     HashMap<String, TextView> holder =  new HashMap<String, TextView>();
-    Chart chart = new Chart();
+    Chart chart;
     ToggleButton toggle;
     
     public static final String ARG_ITEM = "item";
@@ -86,11 +86,9 @@ public class DetailsFragment extends Fragment {
         holder.put("open_price",(TextView)view.findViewById(R.id.d_open_price));
         
         final XYPlot plot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);
-        chart.setPlot(plot);
+        chart = new Chart(plot,handler);
         
         stockListener = new Stock(numericFields,otherFields,handler,holder);
-        stockListener.setChart(chart);
-
         
         return view;
     }
@@ -132,6 +130,7 @@ public class DetailsFragment extends Fragment {
         if (item != currentItem || this.currentSubscription == null) {
             if (this.currentSubscription != null) {
                 this.currentSubscription.removeListener(stockListener);
+                this.currentSubscription.removeListener(chart);
             }
             
             String itemName = "item"+item;
@@ -141,6 +140,7 @@ public class DetailsFragment extends Fragment {
             this.currentSubscription.setRequestedSnapshot("yes");
             
             this.currentSubscription.addListener(stockListener);
+            this.currentSubscription.addListener(chart);
             
             this.subscriptionHandling.setSubscription(this.currentSubscription);
             
