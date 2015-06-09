@@ -15,10 +15,19 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import com.lightstreamer.simple_demo.android.LightstreamerClient.LightstreamerClientProxy;
+
+import com.lightstreamer.client.Subscription;
 
 import android.app.Activity;
 import android.util.Log;
+
+/**
+ * We may subscribe/unsubscribe during onAttach/onDetach events (to keep the subscription alive as much as possible even
+ * if the fragment is not visible) or during onResume/onPause so that the subscription is only alive if the fragment is visible.
+ * This implementation follows the latter approach while the StocksFragment uses the former. 
+ *
+ */
+
 
 public class SubscriptionFragment /*extends Fragment*/ {
 

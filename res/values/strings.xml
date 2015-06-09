@@ -21,8 +21,10 @@
     <string name="start">Restart Lightstreamer Connection</string>
     <string name="about">About this demo</string>
     <string name="status_disconnected">Disconnected</string>
-    <string name="status_streaming">Streaming</string>
-    <string name="status_polling">Polling</string>
+    <string name="status_streaming">Streaming over HTTP</string>
+    <string name="status_polling">Polling over HTTP</string>
+    <string name="status_ws_streaming">Streaming over WS</string>
+    <string name="status_ws_polling">Polling over WS</string>
     <string name="status_stalled">Stalled</string>
     <string name="status_connecting">Connecting</string>
     <string name="status_waiting">Disconnected, waiting to connect again</string>
@@ -40,6 +42,6 @@
     <string name="max">Max</string>
     <string name="lightstreamer">Lightstreamer</string>
 
-    <string name="host">http://10.0.2.2:8080</string>
+    <string name="host">https://push.lightstreamer.com</string>
     
 </resources>

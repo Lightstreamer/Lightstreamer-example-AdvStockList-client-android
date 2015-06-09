@@ -16,11 +16,14 @@
 package com.lightstreamer.simple_demo.android;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import android.os.Handler;
 import android.widget.TextView;
 
-import com.lightstreamer.ls_client.UpdateInfo;
+import com.lightstreamer.client.ItemUpdate;
+import com.lightstreamer.client.Subscription;
 
 public class Stock {
 
@@ -69,12 +72,12 @@ public class Stock {
         return this.lastPrice;
     }
     
-    public void update(UpdateInfo newData, Handler handler) {
-        this.updateView(newData, handler, numericFields, true);
-        this.updateView(newData, handler, otherFields, false);
+    public void update(ItemUpdate newData, Subscription sub, Handler handler) {
+        this.updateView(newData, sub, handler, numericFields, true);
+        this.updateView(newData, sub, handler, otherFields, false);
         
         //save lastPrice
-        String value = newData.getNewValue("last_price");
+        String value = newData.getValue("last_price");
         try {
             this.lastPrice = Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
@@ -85,56 +88,60 @@ public class Stock {
         chart.addPoint(newData);
     }
     
-    private void updateView(UpdateInfo newData, Handler handler, String[] fields, boolean numeric) {
+    private void updateView(ItemUpdate newData, Subscription sub, Handler handler, String[] fields, boolean numeric) {
         boolean snapshot = newData.isSnapshot();
-        for (int i=0; i<fields.length; i++) {
+        String itemName = newData.getItemName();
+        
+        Iterator<Entry<String, String>> changedFields = newData.getChangedFieldsIterator();
+        while(changedFields.hasNext()) {
             
-            if (newData.isValueChanged(fields[i])) {
-                String value = newData.getNewValue(fields[i]);
-                TextView field = holder.get(fields[i]);
+            Entry<String, String> updatedField = changedFields.next();
+            String value = updatedField.getValue();
+            String fieldName = updatedField.getKey();
+            TextView field = holder.get(fieldName);
+            
+            if (field != null) {
                 
-                if (field != null) {
+                double upDown = 0.0;
+                int color;
+                if (!snapshot ) {
+                    // update cell color 
+                    if (numeric) {
+                        String oldValue = sub.getValue(itemName,fieldName); //get the current value so that we can compare it with the new ones.
+                        try {
+                            double valueNum = Double.parseDouble(value);
+                            double oldValueNum = Double.parseDouble(oldValue);
+                            upDown = valueNum - oldValueNum;
+                        } catch (NumberFormatException nfe) {
+                            //unexpected o_O
+                        }
+                    }
                     
-                    double upDown = 0.0;
-                    int color;
-                    if (!snapshot ) {
-                        // update cell color 
-                        if (numeric) {
-                            String oldValue = newData.getOldValue(fields[i]);
-                            try {
-                                double valueNum = Double.parseDouble(value);
-                                double oldValueNum = Double.parseDouble(oldValue);
-                                upDown = valueNum - oldValueNum;
-                            } catch (NumberFormatException nfe) {
-                                //unexpected o_O
-                            }
-                        }
-                        
-                        if (upDown < 0) {
-                            color = R.color.lower_highlight; 
-                        } else {
-                            color = R.color.higher_highlight; 
-                        }
-                       
+                    if (upDown < 0) {
+                        color = R.color.lower_highlight; 
                     } else {
-                        color = R.color.snapshot_highlight;
+                        color = R.color.higher_highlight; 
                     }
-                    
                    
-                    
-                    UpdateRunnable turnOff = turnOffRunnables.get(fields[i]);
-                    if (turnOff != null) {
-                        turnOff.invalidate();
-                    }
-                    turnOff = new UpdateRunnable(field,null,R.color.transparent);
-                    this.turnOffRunnables.put(fields[i], turnOff);
-                    
-                    handler.post(new UpdateRunnable(field,value,color));
-                    handler.postDelayed(turnOff, 600);
+                } else {
+                    color = R.color.snapshot_highlight;
                 }
                 
+               
+                
+                UpdateRunnable turnOff = turnOffRunnables.get(fieldName);
+                if (turnOff != null) {
+                    turnOff.invalidate();
+                }
+                turnOff = new UpdateRunnable(field,null,R.color.transparent);
+                this.turnOffRunnables.put(fieldName, turnOff);
+                
+                handler.post(new UpdateRunnable(field,value,color));
+                handler.postDelayed(turnOff, 600);
             }
+            
         }
+        
     }
     
     

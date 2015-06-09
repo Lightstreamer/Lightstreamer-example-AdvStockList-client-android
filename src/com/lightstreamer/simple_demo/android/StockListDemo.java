@@ -16,14 +16,15 @@
 package com.lightstreamer.simple_demo.android;
 
 
-import com.lightstreamer.simple_demo.android.LightstreamerClient.LightstreamerClientProxy;
-import com.lightstreamer.simple_demo.android.LightstreamerClient.StatusChangeListener;
+import java.io.IOException;
 
-import android.annotation.TargetApi;
+import com.lightstreamer.client.ClientListener;
+import com.lightstreamer.client.LightstreamerClient;
+import com.lightstreamer.client.Subscription;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -44,13 +45,13 @@ import android.widget.TextView;
 
 public class StockListDemo extends ActionBarActivity implements 
     StocksFragment.onStockSelectedListener, 
-    StatusChangeListener, 
     LightstreamerClientProxy {
 
     private static final String TAG = "StockListDemo";
     
     private boolean userDisconnect = false;
-    private LightstreamerClient lsClient = new LightstreamerClient();
+    private LightstreamerClient lsClient = new LightstreamerClient(null, "DEMO");
+    private ClientListener currentListener = new LSClientListener();
     private boolean pnEnabled = false;
     
     private GestureDetectorCompat mDetector; 
@@ -62,7 +63,7 @@ public class StockListDemo extends ActionBarActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        lsClient.setServer(getResources().getString(R.string.host));
+        lsClient.connectionDetails.setServerAddress((String) (getResources().getString(R.string.host)));
 
         GestureControls gs = new GestureControls();
         mDetector = new GestureDetectorCompat(this,gs);
@@ -123,7 +124,11 @@ public class StockListDemo extends ActionBarActivity implements
         super.onResume();
 
         handler.post(new StatusChange(lsClient.getStatus()));
-        lsClient.setListener(this);
+        
+        //remove and add the listener to make the client call onListenStart that in turn will update the current status on the view 
+        lsClient.removeListener(this.currentListener);
+        lsClient.addListener(this.currentListener);
+
         if (!userDisconnect) {
             this.start();
         }
@@ -229,19 +234,40 @@ public class StockListDemo extends ActionBarActivity implements
         }
     }
 
-    //Status handling
+    public class LSClientListener implements ClientListener {
 
-    @Override
-    public void onStatusChange(int status) {
-        handler.post(new StatusChange(status));
+        @Override
+        public void onListenEnd(com.lightstreamer.client.LightstreamerClient arg0) {
+        }
+
+        @Override
+        public void onListenStart(com.lightstreamer.client.LightstreamerClient client) {
+            this.onStatusChange(client.getStatus());
+            
+        }
+
+        @Override
+        public void onPropertyChange(String arg0) {
+        }
+
+        @Override
+        public void onServerError(int code, String message) {
+            Log.e(TAG,"Error "+code+": "+message);
+        }
+
+        @Override
+        public void onStatusChange(String status) {
+            handler.post(new StatusChange(status));
+        }
         
     }
     
+    
     private class StatusChange implements Runnable {
 
-        private int status;
+        private String status;
 
-        public StatusChange(int status) {
+        public StatusChange(String status) {
             this.status = status;
         }
         
@@ -263,34 +289,40 @@ public class StockListDemo extends ActionBarActivity implements
             
             switch(status) {
             
-                case LightstreamerClient.STALLED: {
-                    applyStatus(R.drawable.status_stalled,R.string.status_stalled);
-                    break;
-                }
-                case LightstreamerClient.STREAMING: {
-                    applyStatus(R.drawable.status_connected_streaming,R.string.status_streaming);
-                    break;
-                }
-                case LightstreamerClient.POLLING: {
-                    applyStatus(R.drawable.status_connected_polling,R.string.status_polling);
-                    break;
-                }
-                case LightstreamerClient.DISCONNECTED: {
-                    applyStatus(R.drawable.status_disconnected,R.string.status_disconnected);
-                    break;
-                }
-                case LightstreamerClient.CONNECTING: {
+                case "CONNECTING":
+                case "CONNECTED:STREAM-SENSE":
                     applyStatus(R.drawable.status_disconnected,R.string.status_connecting);
                     break;
-                }
-                case LightstreamerClient.WAITING: {
+                    
+                case "DISCONNECTED":
+                    applyStatus(R.drawable.status_disconnected,R.string.status_disconnected);
+                    break;     
+                case "DISCONNECTED:WILL-RETRY":
                     applyStatus(R.drawable.status_disconnected,R.string.status_waiting);
                     break;
-                }
-                default: {
+                
+                case "CONNECTED:HTTP-STREAMING":
+                    applyStatus(R.drawable.status_connected_streaming,R.string.status_streaming);
+                    break;
+                case "CONNECTED:WS-STREAMING":
+                    applyStatus(R.drawable.status_connected_streaming,R.string.status_ws_streaming);
+                    break;
+                
+                case "CONNECTED:HTTP-POLLING":
+                     applyStatus(R.drawable.status_connected_polling,R.string.status_polling);
+                     break;
+                case "CONNECTED:WS-POLLING":
+                    applyStatus(R.drawable.status_connected_polling,R.string.status_ws_polling);
+                    break;
+                    
+                case "STALLED":
+                    applyStatus(R.drawable.status_stalled,R.string.status_stalled);
+                    break;
+                
+                default: 
                     Log.wtf(TAG, "Recevied unexpected connection status: " + status);
                     return;
-                }
+                
             }
         }
         
@@ -319,22 +351,23 @@ public class StockListDemo extends ActionBarActivity implements
 
     @Override
     public void start() {
-        lsClient.start();
+        lsClient.connect();
     }
 
     @Override
     public void stop(boolean applyPause) {
-        lsClient.stop(applyPause);
+        //TODO wait a couple of seconds, avoid calling disconnect if a new connect call arrives
+        lsClient.disconnect();
     }
 
     @Override
     public void addSubscription(Subscription sub) {
-        lsClient.addSubscription(sub);
+        lsClient.subscribe(sub);
     }
 
     @Override
     public void removeSubscription(Subscription sub) {
-        lsClient.removeSubscription(sub);
+        lsClient.unsubscribe(sub);
     }
 
     

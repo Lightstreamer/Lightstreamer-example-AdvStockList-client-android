@@ -31,7 +31,7 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.lightstreamer.ls_client.UpdateInfo;
+import com.lightstreamer.client.ItemUpdate;
 
 public class Chart {
     
@@ -88,9 +88,9 @@ public class Chart {
         this.redraw();
     }
     
-    public void addPoint(UpdateInfo newData) {
-        String lastPrice = newData.getNewValue("last_price");
-        String time = newData.getNewValue("time");
+    public void addPoint(ItemUpdate newData) {
+        String lastPrice = newData.getValue("last_price");
+        String time = newData.getValue("time");
         this.addPoint(time,lastPrice);
     }
     

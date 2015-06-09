@@ -17,7 +17,7 @@ package com.lightstreamer.simple_demo.android;
 
 import java.util.ArrayList;
 
-import com.lightstreamer.simple_demo.android.LightstreamerClient.LightstreamerClientProxy;
+import com.lightstreamer.client.Subscription;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -56,8 +56,10 @@ public class StocksFragment extends ListFragment {
             list.add(new StockForList(items[i],i));
         }
     }
+   
+    private Subscription mainSubscription = new Subscription("MERGE",StocksFragment.items,StocksFragment.subscriptionFields);
+    private MainSubscription mainSubscriptionListener = new MainSubscription(list);
     
-    private MainSubscription mainSubscription = new MainSubscription(list);
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
@@ -69,10 +71,11 @@ public class StocksFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         handler = new Handler();
         
         setListAdapter(new StocksAdapter(getActivity(), R.layout.row_layout, list));
+        
     }
     
     @Override
@@ -80,7 +83,7 @@ public class StocksFragment extends ListFragment {
         super.onStart();
         
         //there's always only one StocksFragment at a time
-        mainSubscription.changeContext(handler, getListView()); 
+        mainSubscriptionListener.changeContext(handler, getListView()); 
         
         if (getFragmentManager().findFragmentById(R.id.details_fragment) != null) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -100,6 +103,11 @@ public class StocksFragment extends ListFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement LightstreamerClientProxy");
         }
+        
+        mainSubscription.setDataAdapter("QUOTE_ADAPTER");
+        mainSubscription.setRequestedMaxFrequency("1");
+        mainSubscription.setRequestedSnapshot("yes");
+        mainSubscription.addListener(mainSubscriptionListener);
         lsClient.addSubscription(mainSubscription);
       
         // This makes sure that the container activity has implemented

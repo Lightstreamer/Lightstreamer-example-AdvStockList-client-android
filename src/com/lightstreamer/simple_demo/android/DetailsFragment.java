@@ -16,14 +16,10 @@
 package com.lightstreamer.simple_demo.android;
 
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.androidplot.xy.XYPlot;
-import com.lightstreamer.ls_client.ExtendedTableInfo;
-import com.lightstreamer.ls_client.HandyTableListener;
-import com.lightstreamer.ls_client.SubscrException;
-import com.lightstreamer.ls_client.SubscribedTableKey;
-import com.lightstreamer.ls_client.UpdateInfo;
+import com.lightstreamer.client.ItemUpdate;
+import com.lightstreamer.client.Subscription;
+import com.lightstreamer.client.SubscriptionListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -55,7 +51,7 @@ public class DetailsFragment extends Fragment {
     
     int currentItem = 0;
 
-    private ItemSubscription currentSubscription = null;
+    private Subscription currentSubscription = null;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,9 +130,23 @@ public class DetailsFragment extends Fragment {
     public void updateStocksView(int item) {
         if (item != currentItem || this.currentSubscription == null) {
             if (this.currentSubscription != null) {
-                this.currentSubscription.disable();
+                this.currentSubscription.removeListener(this.currentSubscription.getListeners()[0]);
             }
-            this.currentSubscription = new ItemSubscription("item"+item);
+            
+            String itemName = "item"+item;
+            
+            this.currentSubscription = new Subscription("MERGE",itemName,subscriptionFields);
+            currentSubscription.setDataAdapter("QUOTE_ADAPTER");
+            this.currentSubscription.setRequestedSnapshot("yes");
+            
+            Stock stock = new Stock(itemName,numericFields,otherFields);
+            stock.setHolder(holder);
+            stock.setChart(chart);
+            
+            this.currentSubscription.addListener(new StockListener(stock));
+            
+            
+            
             this.subscriptionHandling.setSubscription(this.currentSubscription);
             
             currentItem = item;
@@ -155,95 +165,72 @@ public class DetailsFragment extends Fragment {
         outState.putInt(ARG_ITEM, currentItem);
     }
     
+   
     
-    private class ItemSubscription implements Subscription {
-    
-        private final Stock stock;
-        private ExtendedTableInfo tableInfo;
-        private SubscribedTableKey key;
-        private StockListener listener;
+    private class StockListener implements SubscriptionListener {
         
-        public ItemSubscription(String item) {
-            this.stock = new Stock(item,numericFields,otherFields);
-            stock.setHolder(holder);
-            stock.setChart(chart);
-                     
-            this.listener = new StockListener(stock);
-            
-            try {
-                this.tableInfo = new ExtendedTableInfo(new String[] {item}, "MERGE", subscriptionFields , true);
-                this.tableInfo.setDataAdapter("QUOTE_ADAPTER");
-            } catch (SubscrException e) {
-                Log.wtf(TAG, "I'm pretty sure MERGE is compatible with the snapshot request!");
-            }
-        }
-
-        public void disable() {
-            this.listener.disable();
-        }
-
-        @Override
-        public HandyTableListener getTableListener() {
-            return this.listener;
-        }
-
-        @Override
-        public SubscribedTableKey getTableKey() {
-            return  this.key;
-        }
-
-        @Override
-        public ExtendedTableInfo getTableInfo() {
-            return this.tableInfo;
-        }
-
-        @Override
-        public void setTableKey(SubscribedTableKey key) {
-            this.key = key;
-        }
-
-    }
-    
-    private class StockListener implements HandyTableListener {
-        
-        private AtomicBoolean disabled = new AtomicBoolean(false);
         private final Stock stock;
+        private Subscription sub;
         
         public StockListener(Stock stock) {
             this.stock = stock;
         }
         
-        public void disable() {
-            disabled.set(true);
-        }
-        
+
         @Override
-        public void onRawUpdatesLost(int arg0, String arg1, int arg2) {
+        public void onClearSnapshot(String arg0, int arg1) {
+            Log.v(TAG,"Clear snapshot event");
+        }
+
+        @Override
+        public void onCommandSecondLevelItemLostUpdates(int arg0, String arg1) {
+            Log.wtf(TAG,"Not expecting 2nd level events");
+        }
+
+        @Override
+        public void onCommandSecondLevelSubscriptionError(int arg0,
+                String arg1, String arg2) {
+            Log.wtf(TAG,"Not expecting 2nd level events");
+        }
+
+        @Override
+        public void onEndOfSnapshot(String arg0, int itemName) {
+             Log.v(TAG,"Snapshot end for " + itemName);
+        }
+
+        @Override
+        public void onItemLostUpdates(String arg0, int arg1, int arg2) {
             Log.wtf(TAG,"Not expecting lost updates");
         }
 
         @Override
-        public void onSnapshotEnd(int itemPos, String itemName) {
-            Log.v(TAG,"Snapshot end for " + itemName);
+        public void onItemUpdate(ItemUpdate update) {
+            Log.v(TAG,"Update for " + update.getItemName());
+            this.stock.update(update,sub,handler);
         }
 
         @Override
-        public void onUnsubscr(int itemPos, String itemName) {
-            Log.v(TAG,"Unsubscribed " + itemName);
+        public void onListenEnd(Subscription arg0) {
         }
 
         @Override
-        public void onUnsubscrAll() {
-            Log.v(TAG,"Unsubscribed all");
+        public void onListenStart(Subscription sub) {
+            this.sub = sub;
         }
 
         @Override
-        public void onUpdate(int itemPos, String itemName, UpdateInfo newData) {
-            if (disabled.get()) {
-                return;
-            }
-            Log.v(TAG,"Update for " + itemName);
-            this.stock.update(newData,handler);
+        public void onSubscription() {
+            Log.v(TAG,"Subscribed");
+        }
+
+        @Override
+        public void onSubscriptionError(int code, String message) {
+            Log.v(TAG,"Subscription error " + code+": " + message);
+        }
+
+        @Override
+        public void onUnsubscription() {
+             Log.v(TAG,"Unsubscribed");
         }
         
     }
