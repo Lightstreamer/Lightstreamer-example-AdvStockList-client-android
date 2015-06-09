@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Weswit Srl
+ * Copyright 2015 Weswit Srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ package com.lightstreamer.simple_demo.android;
 import java.util.ArrayList;
 
 import com.lightstreamer.client.ItemUpdate;
-import com.lightstreamer.client.Subscription;
 
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ListView;
 
 

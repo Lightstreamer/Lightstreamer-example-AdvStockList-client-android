@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Weswit Srl
+ * Copyright 2015 Weswit Srl
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-
-import java.io.IOException;
 
 import com.lightstreamer.client.ClientListener;
 import com.lightstreamer.client.LightstreamerClient;
