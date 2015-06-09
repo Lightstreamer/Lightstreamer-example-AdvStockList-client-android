@@ -33,7 +33,7 @@ import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.lightstreamer.client.ItemUpdate;
 
-public class Chart {
+public class Chart extends SimpleSubscriptionListener {
     
     private Series series;
     private XYPlot dynamicPlot;
@@ -46,6 +46,7 @@ public class Chart {
     private final static int MAX_SERIES_SIZE = 40;
     
     public Chart() {
+    	super("Chart");
         this.series = new Series();
     }
 

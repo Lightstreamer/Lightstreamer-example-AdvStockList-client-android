@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
 
-public class Stock {
+public class Stock extends SimpleSubscriptionListener {
 
     //var fieldsList = ["last_price", "time", "pct_change", "bid_quantity", "bid", "ask", "ask_quantity", "min", "max", "ref_price", "open_price", "stock_name", 
     
@@ -36,59 +36,49 @@ public class Stock {
     private String[] otherFields;
     private Chart chart;
     
-    private double lastPrice; //might improve by saving all the field values
+	private Handler handler;
+	private Subscription sub;
 
     
-    public Stock(String item, String[] numericFields, String[] otherFields) {
+    public Stock(String[] numericFields, String[] otherFields, Handler handler, HashMap<String,TextView> holder) {
+    	super("Stock");
         this.numericFields = numericFields;
         this.otherFields = otherFields;
-    }
-    
-    public void setHolder(HashMap<String,TextView> holder) { //UI thread
+        this.handler = handler;
         this.holder = holder;
-        
-        this.resetHolder(holder, numericFields);
-        this.resetHolder(holder, otherFields);
-
     }
     
-    private void resetHolder(HashMap<String,TextView> holder, String[] fields) {  //UI thread
-        for (int i=0; i<fields.length; i++) {
-            
-            TextView field = holder.get(fields[i]);
-            if (field != null) {
-                field.setText("N/A");
-            }
-            
-        }
-    }
     
     public void setChart(Chart chart) { //UI thread
         this.chart = chart;
         this.chart.clean();
     }
     
-    public double getLastPrice() {
-        return this.lastPrice;
+    @Override
+    public void onListenStart(Subscription sub) {
+    	super.onListenStart(sub);
+    	this.sub = sub;
+    	
+    	handler.post(new ResetRunnable());
     }
     
-    public void update(ItemUpdate newData, Subscription sub, Handler handler) {
-        this.updateView(newData, sub, handler, numericFields, true);
-        this.updateView(newData, sub, handler, otherFields, false);
-        
-        //save lastPrice
-        String value = newData.getValue("last_price");
-        try {
-            this.lastPrice = Double.parseDouble(value);
-        } catch (NumberFormatException nfe) {
-            //unexpected o_O
-        }
-        
-        
-        chart.addPoint(newData);
+    @Override
+    public void onListenEnd(Subscription sub) {
+    	super.onListenEnd(sub);
+    	this.sub = null;
     }
     
-    private void updateView(ItemUpdate newData, Subscription sub, Handler handler, String[] fields, boolean numeric) {
+    
+    @Override
+    public void onItemUpdate(ItemUpdate update) {
+    	super.onItemUpdate(update);
+    	this.updateView(update, numericFields, true);
+        this.updateView(update, otherFields, false);
+        
+        chart.addPoint(update);
+    }
+    
+    private void updateView(ItemUpdate newData, String[] fields, boolean numeric) {
         boolean snapshot = newData.isSnapshot();
         String itemName = newData.getItemName();
         
@@ -127,8 +117,6 @@ public class Stock {
                     color = R.color.snapshot_highlight;
                 }
                 
-               
-                
                 UpdateRunnable turnOff = turnOffRunnables.get(fieldName);
                 if (turnOff != null) {
                     turnOff.invalidate();
@@ -144,7 +132,25 @@ public class Stock {
         
     }
     
-    
+    private class ResetRunnable implements Runnable {
+    	
+    	public synchronized void run() {
+    		resetHolder(holder, numericFields);
+            resetHolder(holder, otherFields);
+    	}
+    	
+    	private void resetHolder(HashMap<String,TextView> holder, String[] fields) {  
+            for (int i=0; i<fields.length; i++) {
+                
+                TextView field = holder.get(fields[i]);
+                if (field != null) {
+                    field.setText("N/A");
+                }
+                
+            }
+        }
+        
+    }
     
     private class UpdateRunnable implements Runnable {
         private int background;

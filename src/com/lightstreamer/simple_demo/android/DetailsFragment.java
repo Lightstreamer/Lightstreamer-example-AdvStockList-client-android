@@ -17,15 +17,12 @@ package com.lightstreamer.simple_demo.android;
 
 import java.util.HashMap;
 import com.androidplot.xy.XYPlot;
-import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
-import com.lightstreamer.client.SubscriptionListener;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +31,6 @@ import android.widget.ToggleButton;
 
 public class DetailsFragment extends Fragment {
     
-    private static final String TAG = "Details";
     
     public final static String[] numericFields = {"last_price", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
     public final static String[] otherFields = {"stock_name", "time"};
@@ -52,6 +48,8 @@ public class DetailsFragment extends Fragment {
     int currentItem = 0;
 
     private Subscription currentSubscription = null;
+
+	private Stock stockListener;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +87,9 @@ public class DetailsFragment extends Fragment {
         
         final XYPlot plot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);
         chart.setPlot(plot);
+        
+        stockListener = new Stock(numericFields,otherFields,handler,holder);
+        stockListener.setChart(chart);
 
         
         return view;
@@ -130,7 +131,7 @@ public class DetailsFragment extends Fragment {
     public void updateStocksView(int item) {
         if (item != currentItem || this.currentSubscription == null) {
             if (this.currentSubscription != null) {
-                this.currentSubscription.removeListener(this.currentSubscription.getListeners()[0]);
+                this.currentSubscription.removeListener(stockListener);
             }
             
             String itemName = "item"+item;
@@ -139,13 +140,7 @@ public class DetailsFragment extends Fragment {
             currentSubscription.setDataAdapter("QUOTE_ADAPTER");
             this.currentSubscription.setRequestedSnapshot("yes");
             
-            Stock stock = new Stock(itemName,numericFields,otherFields);
-            stock.setHolder(holder);
-            stock.setChart(chart);
-            
-            this.currentSubscription.addListener(new StockListener(stock));
-            
-            
+            this.currentSubscription.addListener(stockListener);
             
             this.subscriptionHandling.setSubscription(this.currentSubscription);
             
@@ -166,74 +161,6 @@ public class DetailsFragment extends Fragment {
     }
     
    
-    
-    private class StockListener implements SubscriptionListener {
-        
-        private final Stock stock;
-        private Subscription sub;
-        
-        public StockListener(Stock stock) {
-            this.stock = stock;
-        }
-        
-
-        @Override
-        public void onClearSnapshot(String arg0, int arg1) {
-            Log.v(TAG,"Clear snapshot event");
-        }
-
-        @Override
-        public void onCommandSecondLevelItemLostUpdates(int arg0, String arg1) {
-            Log.wtf(TAG,"Not expecting 2nd level events");
-        }
-
-        @Override
-        public void onCommandSecondLevelSubscriptionError(int arg0,
-                String arg1, String arg2) {
-            Log.wtf(TAG,"Not expecting 2nd level events");
-        }
-
-        @Override
-        public void onEndOfSnapshot(String arg0, int itemName) {
-             Log.v(TAG,"Snapshot end for " + itemName);
-        }
-
-        @Override
-        public void onItemLostUpdates(String arg0, int arg1, int arg2) {
-            Log.wtf(TAG,"Not expecting lost updates");
-        }
-
-        @Override
-        public void onItemUpdate(ItemUpdate update) {
-            Log.v(TAG,"Update for " + update.getItemName());
-            this.stock.update(update,sub,handler);
-        }
-
-        @Override
-        public void onListenEnd(Subscription arg0) {
-        }
-
-        @Override
-        public void onListenStart(Subscription sub) {
-            this.sub = sub;
-        }
-
-        @Override
-        public void onSubscription() {
-            Log.v(TAG,"Subscribed");
-        }
-
-        @Override
-        public void onSubscriptionError(int code, String message) {
-            Log.v(TAG,"Subscription error " + code+": " + message);
-        }
-
-        @Override
-        public void onUnsubscription() {
-             Log.v(TAG,"Unsubscribed");
-        }
-        
-    }
 
     
 
