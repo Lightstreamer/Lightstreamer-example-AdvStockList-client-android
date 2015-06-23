@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lightstreamer.simple_demo.android"
-    android:versionCode="5"
-    android:versionName="1.0" >
+    android:versionCode="7"
+    android:versionName="2.0" >
 
     <!-- The targetSdkVersion is optional, but it's always a good practice
          to target higher versions. -->
