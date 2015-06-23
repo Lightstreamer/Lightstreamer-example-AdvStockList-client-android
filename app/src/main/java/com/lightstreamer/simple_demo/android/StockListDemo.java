@@ -16,10 +16,6 @@
 package com.lightstreamer.simple_demo.android;
 
 
-import com.lightstreamer.client.ClientListener;
-import com.lightstreamer.client.LightstreamerClient;
-import com.lightstreamer.client.Subscription;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -40,6 +36,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lightstreamer.client.ClientListener;
+import com.lightstreamer.client.LightstreamerClient;
+import com.lightstreamer.client.Subscription;
+
 
 public class StockListDemo extends ActionBarActivity implements 
     StocksFragment.onStockSelectedListener, 
@@ -48,6 +48,7 @@ public class StockListDemo extends ActionBarActivity implements
     private static final String TAG = "StockListDemo";
     
     private boolean userDisconnect = false;
+    private boolean connectionWish = false;
     private LightstreamerClient lsClient = new LightstreamerClient(null, "DEMO");
     private ClientListener currentListener = new LSClientListener();
     private boolean pnEnabled = false;
@@ -107,7 +108,7 @@ public class StockListDemo extends ActionBarActivity implements
     
     @Override 
     public void onNewIntent(Intent intent) {
-        Log.d(TAG,"New intent received");
+        Log.d(TAG, "New intent received");
         setIntent(intent);
     }
     
@@ -208,7 +209,7 @@ public class StockListDemo extends ActionBarActivity implements
     
     @Override
     public void onStockSelected(int item) {
-        Log.v(TAG,"Stock detail selected");
+        Log.v(TAG, "Stock detail selected");
 
         DetailsFragment detailsFrag = getDetailsFragment();
         
@@ -347,18 +348,40 @@ public class StockListDemo extends ActionBarActivity implements
         }
         
     }
-    
-    
+
+
 
     @Override
     public void start() {
-        lsClient.connect();
+        synchronized (lsClient) {
+            connectionWish = true;
+            lsClient.connect();
+        }
     }
 
     @Override
     public void stop(boolean applyPause) {
-        //TODO wait a couple of seconds, avoid calling disconnect if a new connect call arrives
-        lsClient.disconnect();
+        synchronized (lsClient) {
+            connectionWish = false;
+            if (!applyPause) {
+                lsClient.disconnect();
+            } else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                        }
+                        synchronized (lsClient) {
+                            if (!connectionWish) {
+                                lsClient.disconnect();
+                            }
+                        }
+                    }
+                }.start();
+            }
+        }
     }
 
     @Override
