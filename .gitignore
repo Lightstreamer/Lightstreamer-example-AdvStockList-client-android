@@ -1,8 +1,7 @@
-.project
-.metadata
-bin/
-gen/
-.classpath
-.settings/
-libs/*.jar
-project.protperties
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
