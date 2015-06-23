@@ -24,7 +24,7 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -41,7 +41,7 @@ import com.lightstreamer.client.LightstreamerClient;
 import com.lightstreamer.client.Subscription;
 
 
-public class StockListDemo extends ActionBarActivity implements 
+public class StockListDemo extends AppCompatActivity implements
     StocksFragment.onStockSelectedListener, 
     LightstreamerClientProxy {
 
