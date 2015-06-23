@@ -288,10 +288,13 @@ public class StockListDemo extends ActionBarActivity implements
             switch(status) {
             
                 case "CONNECTING":
-                case "CONNECTED:STREAM-SENSE":
                     applyStatus(R.drawable.status_disconnected,R.string.status_connecting);
                     break;
-                    
+
+                case "CONNECTED:STREAM-SENSE":
+                    applyStatus(R.drawable.status_connected_polling,R.string.status_connecting);
+                    break;
+
                 case "DISCONNECTED":
                     applyStatus(R.drawable.status_disconnected,R.string.status_disconnected);
                     break;     
