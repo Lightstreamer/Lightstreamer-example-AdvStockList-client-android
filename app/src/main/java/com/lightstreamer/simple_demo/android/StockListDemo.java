@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,23 +36,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lightstreamer.client.ClientListener;
-import com.lightstreamer.client.LightstreamerClient;
-import com.lightstreamer.client.Subscription;
 
 
 public class StockListDemo extends AppCompatActivity implements
-    StocksFragment.onStockSelectedListener, 
-    LightstreamerClientProxy {
+    StocksFragment.onStockSelectedListener {
 
     private static final String TAG = "StockListDemo";
-    
-    private boolean userDisconnect = false;
-    private boolean connectionWish = false;
-    private LightstreamerClient lsClient = new LightstreamerClient(null, "DEMO");
+
     private ClientListener currentListener = new LSClientListener();
     private boolean pnEnabled = false;
+    private boolean isConnectionExpected = false;
     
-    private GestureDetectorCompat mDetector; 
+    private GestureDetectorCompat mDetector;
+
+    LightstreamerClientProxy client;
     
     
     private Handler handler;
@@ -61,8 +57,8 @@ public class StockListDemo extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        lsClient.connectionDetails.setServerAddress((String) (getResources().getString(R.string.host)));
+
+        client = StockListDemoApplication.client;
 
         GestureControls gs = new GestureControls();
         mDetector = new GestureDetectorCompat(this,gs);
@@ -115,23 +111,17 @@ public class StockListDemo extends AppCompatActivity implements
     @Override
     public void onPause() {
         super.onPause();
-        this.stop(true);
+        client.removeListener(currentListener);
+        client.stop(false);
     }
     
     @Override 
     public void onResume() {
         super.onResume();
 
-        handler.post(new StatusChange(lsClient.getStatus()));
-        
-        //remove and add the listener to make the client call onListenStart that in turn will update the current status on the view 
-        lsClient.removeListener(this.currentListener);
-        lsClient.addListener(this.currentListener);
+        client.addListener(this.currentListener);
+        isConnectionExpected = client.start(false);
 
-        if (!userDisconnect) {
-            this.start();
-        }
-        
         int openItem = getIntentItem();
         if (openItem == 0 && findViewById(R.id.fragment_container) == null) {
             //tablet, always start with an open stock
@@ -151,7 +141,7 @@ public class StockListDemo extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { //TODO ????
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -162,9 +152,9 @@ public class StockListDemo extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        Log.v(TAG,"Switch button: " + userDisconnect);
-        menu.findItem(R.id.start).setVisible(userDisconnect);
-        menu.findItem(R.id.stop).setVisible(!userDisconnect);
+        Log.v(TAG,"Switch button: " + isConnectionExpected);
+        menu.findItem(R.id.start).setVisible(!isConnectionExpected);
+        menu.findItem(R.id.stop).setVisible(isConnectionExpected);
         
         return true;
     }
@@ -175,15 +165,15 @@ public class StockListDemo extends AppCompatActivity implements
         int itemId = item.getItemId();
         if (itemId == R.id.stop) {
             Log.i(TAG,"Stop");
-            userDisconnect = true;
             supportInvalidateOptionsMenu();
-            this.stop(false);
+            client.stop(true);
+            isConnectionExpected = false;
             return true;
         } else if (itemId == R.id.start) {
             Log.i(TAG,"Start");
-            userDisconnect = false;
             supportInvalidateOptionsMenu();
-            this.start();
+            client.start(true);
+            isConnectionExpected = true;
             return true;
         } else if (itemId == R.id.about) {
             new AboutDialog().show(getSupportFragmentManager(), null);
@@ -349,53 +339,7 @@ public class StockListDemo extends AppCompatActivity implements
         
     }
 
-
-
-    @Override
-    public void start() {
-        synchronized (lsClient) {
-            connectionWish = true;
-            lsClient.connect();
-        }
-    }
-
-    @Override
-    public void stop(boolean applyPause) {
-        synchronized (lsClient) {
-            connectionWish = false;
-            if (!applyPause) {
-                lsClient.disconnect();
-            } else {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                        }
-                        synchronized (lsClient) {
-                            if (!connectionWish) {
-                                lsClient.disconnect();
-                            }
-                        }
-                    }
-                }.start();
-            }
-        }
-    }
-
-    @Override
-    public void addSubscription(Subscription sub) {
-        lsClient.subscribe(sub);
-    }
-
-    @Override
-    public void removeSubscription(Subscription sub) {
-        lsClient.unsubscribe(sub);
-    }
-
-    
-    //we simply use this class to listen for double taps in which case we reveal/hide 
+ //we simply use this class to listen for double taps in which case we reveal/hide
     //a textual version of the connection status
     private class GestureControls extends 
         GestureDetector.SimpleOnGestureListener implements  

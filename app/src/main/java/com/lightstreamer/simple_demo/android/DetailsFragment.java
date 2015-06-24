@@ -15,10 +15,6 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import java.util.HashMap;
-import com.androidplot.xy.XYPlot;
-import com.lightstreamer.client.Subscription;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.androidplot.xy.XYPlot;
+import com.lightstreamer.client.Subscription;
+
+import java.util.HashMap;
 
 public class DetailsFragment extends Fragment {
     
@@ -54,7 +55,6 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         handler = new Handler();
     }
 

@@ -15,10 +15,6 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import java.util.ArrayList;
-
-import com.lightstreamer.client.Subscription;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +23,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.lightstreamer.client.Subscription;
+
+import java.util.ArrayList;
 
 public class StocksFragment extends ListFragment {
     
@@ -73,7 +73,7 @@ public class StocksFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         
         handler = new Handler();
-        
+
         setListAdapter(new StocksAdapter(getActivity(), R.layout.row_layout, list));
         
     }
@@ -96,14 +96,9 @@ public class StocksFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
-        try {
-             lsClient = (LightstreamerClientProxy) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement LightstreamerClientProxy");
-        }
-        
+
+
+        lsClient = StockListDemoApplication.client;
         mainSubscription.setDataAdapter("QUOTE_ADAPTER");
         mainSubscription.setRequestedMaxFrequency("1");
         mainSubscription.setRequestedSnapshot("yes");

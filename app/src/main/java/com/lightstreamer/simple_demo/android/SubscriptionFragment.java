@@ -16,10 +16,10 @@
 package com.lightstreamer.simple_demo.android;
 
 
-import com.lightstreamer.client.Subscription;
-
 import android.app.Activity;
 import android.util.Log;
+
+import com.lightstreamer.client.Subscription;
 
 /**
  * We may subscribe/unsubscribe during onAttach/onDetach events (to keep the subscription alive as much as possible even
@@ -71,11 +71,6 @@ public class SubscriptionFragment /*extends Fragment*/ {
     }
     
     public synchronized void onAttach(Activity activity) {
-        try {
-            lsClient = (LightstreamerClientProxy) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement LightstreamerClientProxy");
-        }
+        lsClient = StockListDemoApplication.client;
     }
 }

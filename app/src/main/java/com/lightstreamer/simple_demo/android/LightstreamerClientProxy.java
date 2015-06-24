@@ -1,10 +1,14 @@
 package com.lightstreamer.simple_demo.android;
 
+import com.lightstreamer.client.ClientListener;
 import com.lightstreamer.client.Subscription;
 
 public interface LightstreamerClientProxy {
-	public void start();
-    public void stop(boolean applyPause);
-    public void addSubscription(Subscription sub);
-    public void removeSubscription(Subscription sub);
+    boolean start(boolean userCall);
+    void stop(boolean userCall);
+    void addSubscription(Subscription sub);
+    void removeSubscription(Subscription sub);
+    void addListener(ClientListener listener);
+    void removeListener(ClientListener listener);
+    String getStatus();
 }
