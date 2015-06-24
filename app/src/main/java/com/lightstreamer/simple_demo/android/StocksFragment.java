@@ -90,6 +90,15 @@ public class StocksFragment extends ListFragment {
         }
         
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        for (int i = 0; i < list.size(); i++) {
+            StockForList item = list.get(i);
+            item.clean();
+        }
+    }
     
     
     

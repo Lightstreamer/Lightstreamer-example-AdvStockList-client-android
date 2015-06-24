@@ -15,14 +15,14 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import java.text.DecimalFormat;
-
 import android.view.View;
 import android.widget.ListView;
 
+import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.simple_demo.android.MainSubscription.Context;
 import com.lightstreamer.simple_demo.android.StocksAdapter.RowHolder;
-import com.lightstreamer.client.ItemUpdate;
+
+import java.text.DecimalFormat;
 
 public class StockForList {
     
@@ -87,6 +87,16 @@ public class StockForList {
         
         this.turningOff = new TurnOffRunnable(context);
         context.handler.postDelayed(this.turningOff,600);
+    }
+
+    public void clean() {
+        if (this.turningOff != null) {
+            this.turningOff.disable();
+            this.turningOff = null;
+        }
+        stockNameColor = R.color.background;
+        lastPriceColor = R.color.background;
+        timeColor = R.color.background;
     }
     
 
