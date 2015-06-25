@@ -282,7 +282,7 @@ public class StockListDemo extends AppCompatActivity implements
                     applyStatus(R.drawable.status_disconnected,R.string.status_connecting);
                     break;
 
-                case "CONNECTED:STREAM-SENSE":
+                case "CONNECTED:STREAM-SENSING":
                     applyStatus(R.drawable.status_connected_polling,R.string.status_connecting);
                     break;
 
