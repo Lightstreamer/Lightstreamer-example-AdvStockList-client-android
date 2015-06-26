@@ -42,6 +42,6 @@
     <string name="max">Max</string>
     <string name="lightstreamer">Lightstreamer</string>
 
-    <string name="host">https://push.lightstreamer.com</string>
+    <string name="host">http://push.lightstreamer.com</string>
     
 </resources>
