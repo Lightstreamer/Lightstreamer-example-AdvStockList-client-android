@@ -11,10 +11,19 @@ android {
         versionCode 6
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KSTORE"))
+            storePassword System.getenv("KSTOREPWD")
+            keyAlias "LS"
+            keyPassword System.getenv("KEYPWD")
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -25,4 +34,3 @@ dependencies {
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'com.lightstreamer:ls-android-client-compact:2.0-a1'
 }
-
