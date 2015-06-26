@@ -301,8 +301,8 @@ public class StockListDemo extends AppCompatActivity implements
                     break;
                 
                 case "CONNECTED:HTTP-POLLING":
-                     applyStatus(R.drawable.status_connected_polling,R.string.status_polling);
-                     break;
+                    applyStatus(R.drawable.status_connected_polling,R.string.status_polling);
+                    break;
                 case "CONNECTED:WS-POLLING":
                     applyStatus(R.drawable.status_connected_polling,R.string.status_ws_polling);
                     break;
