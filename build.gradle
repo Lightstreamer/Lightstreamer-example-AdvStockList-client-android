@@ -16,7 +16,7 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url "http://www.lightstreamer.com/maven"
+            url "http://download.lightstreamer.com/maven"
         }
     }
 }
