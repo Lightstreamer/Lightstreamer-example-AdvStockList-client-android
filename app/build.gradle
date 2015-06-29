@@ -11,19 +11,19 @@ android {
         versionCode 6
         versionName "1.0"
     }
-    signingConfigs {
+    /*signingConfigs {
         release {
             storeFile file(System.getenv("KSTORE"))
             storePassword System.getenv("KSTOREPWD")
             keyAlias "LS"
             keyPassword System.getenv("KEYPWD")
         }
-    }
+    }*/
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
         }
     }
 }
