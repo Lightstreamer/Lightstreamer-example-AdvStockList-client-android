@@ -15,15 +15,15 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import android.os.Handler;
 import android.widget.TextView;
 
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class Stock extends SimpleSubscriptionListener {
 
@@ -73,7 +73,7 @@ public class Stock extends SimpleSubscriptionListener {
         boolean snapshot = newData.isSnapshot();
         String itemName = newData.getItemName();
         
-        Iterator<Entry<String, String>> changedFields = newData.getChangedFieldsIterator();
+        Iterator<Entry<String, String>> changedFields = newData.getChangedFields().entrySet().iterator();
         while(changedFields.hasNext()) {
             
             Entry<String, String> updatedField = changedFields.next();
