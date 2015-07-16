@@ -1,7 +1,7 @@
 # Lightstreamer - Stock-List Demo - Android Client
 
 
-This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://www.lightstreamer.com/docs/client_android_api/index.html)
+This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://www.lightstreamer.com/docs/client_android_uni_api/index.html)
 to subscribe to real-time updates.
 
 An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Weswit/Lightstreamer-example-MPNStockList-client-android)
@@ -28,11 +28,11 @@ Touch a row opens a new panel with the detailed information, updated in real-tim
 
 ### Dig the Code
 
-* `StockListDemo.java` is the entry point and only `Activity` of the application. It contains two `Fragment`s, the status of
-the application, and acts as a proxy to the LightstreamerClient instance. The two `Fragment` are both visible if the application
-runs on tablet; on the contrary, only one `Fragment` is visible and are exchanged based on the user interaction
-* `LightstreamerClient.java` handles the connection to the Lightstreamer server and the Subscription/Unsubscription requests
-issued by the various part of the application.
+* `StockListDemoApplication.java` is the class representing the application itself. It creates and manage the LightstreamerClient instance
+that is shared by the other classes. A proxy to such instance is exposed as a singleton to the entire application.
+* `StockListDemo.java` is the entry point and only `Activity` of the application. It contains two `Fragment`s, the manu bar for
+the app and listens to LightstreamerClient status events to show the connection status to the user. The two `Fragment` are both visible 
+if the application runs on tablet; on the contrary, only one `Fragment` is visible and are exchanged based on the user interaction
 * `SubscriptionFragment.java` represents a `Fragment` containing a subscription that is started/stopped based on the lifecycle of 
 the `Fragment`. Please note that this class does not actually extend `Fragment`.
 * `StocksFragment.java` and `DetailsFragment.java` are the classes representing the two fragments of the application. 
@@ -41,7 +41,7 @@ the `Fragment`. Please note that this class does not actually extend `Fragment`.
 
 Check out the sources for further explanations.
   
-*NOTE: Not all the functionalities of the Lightstreamer Android Java client are exposed by the classes listed above. You can easily expand those functionalities using the [Android Client API](http://www.lightstreamer.com/docs/client_android_api/index.html) as a reference. If in trouble check out the [specific Lightstreamer forum](http://forums.lightstreamer.com/forumdisplay.php?33-Android-Client-API).*
+*NOTE: Not all the functionalities of the Lightstreamer Android Java client are exposed by the classes listed above. You can easily expand those functionalities using the [Android Client API](http://www.lightstreamer.com/docs/client_android_uni_api/index.html) as a reference. If in trouble check out the [specific Lightstreamer forum](http://forums.lightstreamer.com/forumdisplay.php?33-Android-Client-API).*
 
 ## Install
 
@@ -68,38 +68,33 @@ of this project and extract the `Android_StockListDemo.apk` file.
 
 ## Build
 
-To build your own version of the demo, please consider that this example is comprised of the following folders:
-* `/src` Contains the sources to build the Java-for-Android application.
-* `/res` Contains the images and other resourced needed to the demo. 
-* `/lib` Drop here the `ls-android-client.jar` from the Lighstreamer SDK for Android Clients and
-`androidplot-core.jar` from the Androidplot library, to be used for the build process.
+### Setup the IDE
 
-The demo has also references the [v7 Support Library](https://developer.android.com/tools/support-library/setup.html).
-  
-### Getting Started
+Note that you can skip this section and build the application without using any IDE. 
 
-You can import the sources on a new project on [Eclipse](http://www.eclipse.org/) (provided you installed the necessary
-[ADT plugin](http://developer.android.com/sdk/eclipse-adt.html)) or on [Android Studio](https://developer.android.com/sdk/installing/studio.html).
-In the former case, you'll need to separately download the [Android SDK](http://developer.android.com/sdk/).
+You can either open the provided project into [Android Studio](https://developer.android.com/sdk/installing/studio.html) or
+you can import the sources, the resources, the AndroidManifest file and the required 
+dependencies into new [Eclipse](http://www.eclipse.org/) project (provided you installed the necessary [ADT plugin](http://developer.android.com/sdk/eclipse-adt.html)).
 
-Once the project has been imported, the `android-support-v7-appcompat` dependency has to be satisfied-
-Please follow the related guide: [v7 Support Library](https://developer.android.com/tools/support-library/setup.html).
-
-### Compile and Run
-
-To run the demo, a suitable emulated or real device is required. To run the demo, you'll need at least android 2.1. 
-To receive push notification you'll need a Google account configured on the system. In case the emulator is used a "Google APIs" 
-OS image has to be used.
-
-* On eclipse, right-click on the project in the Package Explorer and click Run As -> Android Application, then follow the instructions.
-* On Android Studio, select Run from the menu and choose "Run", then follow the instructions
+In the Eclipse case, you'll need to separately download the [Android SDK](http://developer.android.com/sdk/), configure the project to
+use the [v7 Support Library](https://developer.android.com/tools/support-library/setup.html) and discover the required libraries and 
+their dependencies by looking at the provided gradle build files.
 
 ### Deploy
   
-You may run the demo against your local server or using our online server at http://push.lightstreamer.com:80. The server to which the demo will connect to is configured in the `res/values/strings.xml` file.
+You may run the demo against your local server or using our online server at http://push.lightstreamer.com:80. The server to which the demo will connect to is configured in the `app/src/main/res/values/strings.xml` file.
 In the former case, the example requires that the [QUOTE_ADAPTER](https://github.com/Weswit/Lightstreamer-example-Stocklist-adapter-java) has to be deployed in your local Lightstreamer server instance;
 the [LiteralBasedProvider](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java) is also needed, but it is already provided by Lightstreamer server.
 
+### Build
+
+To build your own version of the demo you can launch the provided gradle script from the command line or from the IDE itself.
+As an example you can build and install a debug version of the application in an emulator (or device) by running
+```
+gradlew installDebug
+```
+
+You might also use a different build tool (e.g.: Maven, Ivy, etc.) by converting the provided gradle build files. 
 
 ## See Also
 
@@ -115,5 +110,6 @@ the [LiteralBasedProvider](https://github.com/Weswit/Lightstreamer-example-Reusa
 
 ## Lightstreamer Compatibility Notes
 
-* Compatible with Lightstreamer Android Client API v. 1.1 or newer 1.x version.
+* Compatible with Lightstreamer Android Client API v. 2.0 or newer.
 * For Lightstreamer Allegro (+ Android Client API support), Presto, Vivace.
+* For a version of this example compatible with Lightstreamer Android Client API version 1.1, please refer to [this tag](https://github.com/Weswit/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-1.x).
