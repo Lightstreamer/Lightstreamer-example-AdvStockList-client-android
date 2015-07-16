@@ -115,5 +115,5 @@ the [LiteralBasedProvider](https://github.com/Weswit/Lightstreamer-example-Reusa
 
 ## Lightstreamer Compatibility Notes
 
-* Compatible with Lightstreamer Android Client API v. 1.1 or newer.
+* Compatible with Lightstreamer Android Client API v. 1.1 or newer 1.x version.
 * For Lightstreamer Allegro (+ Android Client API support), Presto, Vivace.
