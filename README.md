@@ -1,7 +1,7 @@
 # Lightstreamer - Stock-List Demo - Android Client
 
 
-This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://www.lightstreamer.com/docs/client_android_uni_api/index.html)
+This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://docs.lightstreamer.com/api/ls-android-client/latest/)
 to subscribe to real-time updates.
 
 An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Weswit/Lightstreamer-example-MPNStockList-client-android)
