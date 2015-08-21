@@ -52,7 +52,7 @@ an [Android Virtual Device](http://developer.android.com/tools/devices/emulator.
 has to be deployed on your local Lightstreamer Server instance. Please check out that project and follow the installation 
 instructions provided with it. 
 * Launch Lightstreamer Server.
-* Download the `deploy.zip` file, which you can find in the [deploy release](https://github.com/Weswit/Lightstreamer-example-StockList-client-android/releases) 
+* Download the `deploy.zip` file, which you can find in the [deploy release](https://github.com/Weswit/Lightstreamer-example-AdvStockList-client-android/releases) 
 of this project and extract the `Android_StockListDemo.apk` file.
 * Locate or install the [Android SDK](http://developer.android.com/sdk/index.html)
 * Install the `Android_StockListDemo.apk` in your emulator:
