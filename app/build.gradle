@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'com.lightstreamer:ls-android-client-compact:2.0.0-a1'
+    compile 'com.google.android.gms:play-services:7.5.0'
 }
