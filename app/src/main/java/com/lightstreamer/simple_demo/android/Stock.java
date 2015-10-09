@@ -24,25 +24,28 @@ import com.lightstreamer.client.Subscription;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class Stock extends SimpleSubscriptionListener {
+    private final String[] fields;
 
     //var fieldsList = ["last_price", "time", "pct_change", "bid_quantity", "bid", "ask", "ask_quantity", "min", "max", "ref_price", "open_price", "stock_name", 
     
     private HashMap<String,TextView> holder = null;
     private HashMap<String,UpdateRunnable> turnOffRunnables = new HashMap<String,UpdateRunnable>();
 
-    private String[] numericFields;
-    private String[] otherFields;
+    Set<String> numericField;
     
-        private Handler handler;
-        private Subscription sub;
+    private Handler handler;
+    private Subscription sub;
 
     
-    public Stock(String[] numericFields, String[] otherFields, Handler handler, HashMap<String,TextView> holder) {
+    public Stock(Set<String> numericFields, String[] fields, Handler handler, HashMap<String,TextView> holder) {
         super("Stock");
-        this.numericFields = numericFields;
-        this.otherFields = otherFields;
+
+        this.fields = fields;
+        this.numericField = numericFields;
+
         this.handler = handler;
         this.holder = holder;
     }
@@ -65,13 +68,14 @@ public class Stock extends SimpleSubscriptionListener {
     @Override
     public void onItemUpdate(ItemUpdate update) {
     	super.onItemUpdate(update);
-    	this.updateView(update, numericFields, true);
-        this.updateView(update, otherFields, false);
+    	this.updateView(update);
     }
     
-    private void updateView(ItemUpdate newData, String[] fields, boolean numeric) {
+    private void updateView(ItemUpdate newData) {
         boolean snapshot = newData.isSnapshot();
         String itemName = newData.getItemName();
+
+
         
         Iterator<Entry<String, String>> changedFields = newData.getChangedFields().entrySet().iterator();
         while(changedFields.hasNext()) {
@@ -87,7 +91,7 @@ public class Stock extends SimpleSubscriptionListener {
                 int color;
                 if (!snapshot ) {
                     // update cell color 
-                    if (numeric) {
+                    if (numericField.contains(fieldName)) {
                         String oldValue = sub.getValue(itemName,fieldName); //get the current value so that we can compare it with the new ones.
                         try {
                             double valueNum = Double.parseDouble(value);
@@ -126,8 +130,7 @@ public class Stock extends SimpleSubscriptionListener {
     private class ResetRunnable implements Runnable {
     	
     	public synchronized void run() {
-    		resetHolder(holder, numericFields);
-            resetHolder(holder, otherFields);
+    		resetHolder(holder, fields);
     	}
     	
     	private void resetHolder(HashMap<String,TextView> holder, String[] fields) {  

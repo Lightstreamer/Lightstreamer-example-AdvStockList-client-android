@@ -29,12 +29,23 @@ import com.androidplot.xy.XYPlot;
 import com.lightstreamer.client.Subscription;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DetailsFragment extends Fragment {
     
     
-    public final static String[] numericFields = {"last_price", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
-    public final static String[] otherFields = {"stock_name", "time"};
+    public final static Set<String> numericFields =  new HashSet<String>() {{
+        add("last_price");
+        add("pct_change");
+        add("bid_quantity");
+        add("bid");
+        add("ask");
+        add("ask_quantity");
+        add("min");
+        add("max");
+        add("open_price");
+    }};
     public final static String[] subscriptionFields = {"stock_name", "last_price", "time", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
 
     private final SubscriptionFragment subscriptionHandling = new SubscriptionFragment();
@@ -88,7 +99,7 @@ public class DetailsFragment extends Fragment {
         final XYPlot plot = (XYPlot) view.findViewById(R.id.mySimpleXYPlot);
         chart = new Chart(plot,handler);
         
-        stockListener = new Stock(numericFields,otherFields,handler,holder);
+        stockListener = new Stock(numericFields,subscriptionFields,handler,holder);
         
         return view;
     }
