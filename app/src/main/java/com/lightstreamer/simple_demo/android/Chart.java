@@ -29,12 +29,12 @@ import com.androidplot.xy.XYStepMode;
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
 
-import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 public class Chart extends SimpleSubscriptionListener {
 
@@ -44,9 +44,6 @@ public class Chart extends SimpleSubscriptionListener {
     private Series series;
 
     private XYPlot dynamicPlot;
-    
-    DecimalFormat df = new DecimalFormat("00");
-    
 
     private Handler handler;
     
@@ -108,7 +105,7 @@ public class Chart extends SimpleSubscriptionListener {
     	super.onItemUpdate(update);
     
     	String lastPrice = update.getValue("last_price");
-        String time = update.getValue("time");
+        String time = update.getValue("timestamp");
         this.addPoint(time, lastPrice);
     }
     
@@ -199,7 +196,8 @@ public class Chart extends SimpleSubscriptionListener {
                 prices.remove(0);
                 times.remove(0);
             }
-            
+
+            long longTime = Long.parseLong(time);
             double newPrice = Double.parseDouble(lastPrice);
             
             if (prices.size() == 0) {
@@ -209,13 +207,9 @@ public class Chart extends SimpleSubscriptionListener {
             if (newPrice < minY || newPrice > maxY) {
                 onYOverflow(newPrice);
             }
-            
+
             prices.add(newPrice);
-            
-            String[] pieces = time.split(":");
-            int intTime = Integer.parseInt(pieces[0])*60*60 + Integer.parseInt(pieces[1])*60 + Integer.parseInt(pieces[2]);
-            times.add(intTime);
-            
+            times.add(longTime);
         }
 
         public void reset() {
@@ -245,20 +239,19 @@ public class Chart extends SimpleSubscriptionListener {
 
     @SuppressWarnings("serial")
     private class FormatDateLabel extends Format {
+        private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
         @Override
         public StringBuffer format(Object object, StringBuffer buffer,
                 FieldPosition field) {
             Number num = (Number) object;
-            
-            int val = num.intValue();
-            
-            buffer.append(df.format((long) TimeUnit.SECONDS.toHours(val)));
-            buffer.append(':');
-            buffer.append(df.format((long) TimeUnit.SECONDS.toMinutes(val) % 60));
-            buffer.append(':');
-            buffer.append(df.format(val%60));
-            
-            
+
+            long val = num.longValue();
+
+            Date then = new Date(val);
+
+            buffer.append(dateFormat.format(then));
+
             return buffer;
         }
 

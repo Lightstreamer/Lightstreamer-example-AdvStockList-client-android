@@ -34,7 +34,7 @@ import java.util.Set;
 
 public class DetailsFragment extends Fragment {
     
-    
+
     public final static Set<String> numericFields =  new HashSet<String>() {{
         add("last_price");
         add("pct_change");
@@ -46,7 +46,7 @@ public class DetailsFragment extends Fragment {
         add("max");
         add("open_price");
     }};
-    public final static String[] subscriptionFields = {"stock_name", "last_price", "time", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
+    public final static String[] subscriptionFields = {"stock_name", "last_price", "time", "timestamp", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
 
     private final SubscriptionFragment subscriptionHandling = new SubscriptionFragment();
     private Handler handler;
