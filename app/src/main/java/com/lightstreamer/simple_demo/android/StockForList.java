@@ -23,6 +23,8 @@ import com.lightstreamer.simple_demo.android.MainSubscription.Context;
 import com.lightstreamer.simple_demo.android.StocksAdapter.RowHolder;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StockForList {
     
@@ -39,6 +41,7 @@ public class StockForList {
     private TurnOffRunnable turningOff;
     
     private DecimalFormat format = new DecimalFormat("#.00");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     
     public StockForList(String item, int pos) {
@@ -51,8 +54,8 @@ public class StockForList {
             stockName = newData.getValue("stock_name");
             stockNameColor = isSnapshot ? R.color.snapshot_highlight : R.color.higher_highlight;
         }
-        if (newData.isValueChanged("time")) {
-            time = newData.getValue("time");
+        if (newData.isValueChanged("timestamp")) {
+            time = dateFormat.format(new Date(Long.parseLong(newData.getValue("timestamp"))));
             timeColor = isSnapshot ? R.color.snapshot_highlight : R.color.higher_highlight;
         }
         if (newData.isValueChanged("last_price")) {

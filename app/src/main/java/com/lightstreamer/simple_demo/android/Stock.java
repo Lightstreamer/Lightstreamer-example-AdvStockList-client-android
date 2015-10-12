@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -28,6 +30,7 @@ import java.util.Set;
 
 public class Stock extends SimpleSubscriptionListener {
     private final String[] fields;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     //var fieldsList = ["last_price", "time", "pct_change", "bid_quantity", "bid", "ask", "ask_quantity", "min", "max", "ref_price", "open_price", "stock_name", 
     
@@ -74,8 +77,6 @@ public class Stock extends SimpleSubscriptionListener {
     private void updateView(ItemUpdate newData) {
         boolean snapshot = newData.isSnapshot();
         String itemName = newData.getItemName();
-
-
         
         Iterator<Entry<String, String>> changedFields = newData.getChangedFields().entrySet().iterator();
         while(changedFields.hasNext()) {
@@ -86,6 +87,10 @@ public class Stock extends SimpleSubscriptionListener {
             TextView field = holder.get(fieldName);
             
             if (field != null) {
+                if (fieldName.equals("timestamp")) {
+                    Date then = new Date(Long.parseLong(value));
+                    value = dateFormat.format(then);
+                }
                 
                 double upDown = 0.0;
                 int color;

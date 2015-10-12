@@ -46,7 +46,7 @@ public class DetailsFragment extends Fragment {
         add("max");
         add("open_price");
     }};
-    public final static String[] subscriptionFields = {"stock_name", "last_price", "time", "timestamp", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
+    public final static String[] subscriptionFields = {"stock_name", "last_price", "timestamp", "pct_change","bid_quantity", "bid", "ask", "ask_quantity", "min", "max","open_price"};
 
     private final SubscriptionFragment subscriptionHandling = new SubscriptionFragment();
     private Handler handler;
@@ -86,7 +86,7 @@ public class DetailsFragment extends Fragment {
 
         holder.put("stock_name",(TextView)view.findViewById(R.id.d_stock_name));
         holder.put("last_price",(TextView)view.findViewById(R.id.d_last_price));
-        holder.put("time",(TextView)view.findViewById(R.id.d_time));
+        holder.put("timestamp",(TextView)view.findViewById(R.id.d_time));
         holder.put("pct_change",(TextView)view.findViewById(R.id.d_pct_change));
         holder.put("bid_quantity",(TextView)view.findViewById(R.id.d_bid_quantity));
         holder.put("bid",(TextView)view.findViewById(R.id.d_bid));

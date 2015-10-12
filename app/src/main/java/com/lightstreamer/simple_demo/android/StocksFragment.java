@@ -43,7 +43,7 @@ public class StocksFragment extends ListFragment {
             "item17", "item18", "item19", "item20" };
    
     
-    public final static String[] subscriptionFields = {"stock_name", "last_price", "time"};
+    public final static String[] subscriptionFields = {"stock_name", "last_price", "timestamp"};
     
     private Handler handler;
     LightstreamerClientProxy lsClient;
