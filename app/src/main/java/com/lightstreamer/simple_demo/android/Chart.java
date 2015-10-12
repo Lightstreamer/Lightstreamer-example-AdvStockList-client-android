@@ -15,16 +15,10 @@
  */
 package com.lightstreamer.simple_demo.android;
 
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.util.Log;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
@@ -35,18 +29,30 @@ import com.androidplot.xy.XYStepMode;
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
 
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 public class Chart extends SimpleSubscriptionListener {
-    
+
+    //to avoid sycnhronizations and concurrency issues max, min and series must be only modified by the handler thread
+    double maxY = 0;
+    double minY = 0;
     private Series series;
+
     private XYPlot dynamicPlot;
     
     DecimalFormat df = new DecimalFormat("00");
     
-    double maxY = 0; 
-    double minY = 0;
+
     private Handler handler;
     
     private final static int MAX_SERIES_SIZE = 40;
+
+    private final static String TAG = "Chart";
     
     public Chart(XYPlot dynamicPlot,Handler handler) {
     	super("Chart");
@@ -103,27 +109,49 @@ public class Chart extends SimpleSubscriptionListener {
     
     	String lastPrice = update.getValue("last_price");
         String time = update.getValue("time");
-        this.addPoint(time,lastPrice);
+        this.addPoint(time, lastPrice);
     }
     
-    private void addPoint(String time,String lastPrice) {
-        series.add(time,lastPrice);
+    private void addPoint(final String time, final String lastPrice) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.v(TAG, "New point");
+                series.add(time, lastPrice);
+            }
+        });
         this.redraw();
     }
     
     private void clean() {
-        this.series.reset();
-        maxY = 0;
-        minY = 0;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Reset chart");
+                series.reset();
+                maxY = 0;
+                minY = 0;
+            }
+        });
         this.redraw();
     }
     
     private void redraw() {
-    	handler.post(new RedrawRunnable());
+    	handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (dynamicPlot != null) {
+                    dynamicPlot.setRangeBoundaries(minY, maxY, BoundaryMode.FIXED);
+                    Log.v(TAG, "Redraw chart");
+                    dynamicPlot.redraw();
+                }
+            }
+        });
     }
     
     private void onYOverflow(double last) {
-        //TODO currently never shrinks
+        Log.d(TAG, "Y overflow detected");
+        //XXX currently never shrinks
         int shift = 1;
         if (last > maxY) {
             double newMax = maxY + shift;
@@ -141,33 +169,25 @@ public class Chart extends SimpleSubscriptionListener {
           
           this.minY = newMin;
         }
+        Log.i(TAG, "New Y boundaries: " + this.minY + " -> "+ this.maxY);
     }
     
     private void onFirstPoint(double newPrice) {
+        Log.d(TAG, "First point on chart");
         minY = newPrice-1;
         if (minY < 0) {
             minY = 0;
         }
         maxY = newPrice+1;
+        Log.i(TAG, "New Y boundaries: " + this.minY + " -> "+ this.maxY);
     }
-    
-    private class RedrawRunnable implements Runnable {
 
-        @Override
-        public void run() {
-            if (dynamicPlot != null) {
-                dynamicPlot.setRangeBoundaries(minY, maxY, BoundaryMode.FIXED);
-                dynamicPlot.redraw();
-            }
-        }
-    	
-    }
 
     private class Series implements XYSeries {
 
 
-        ArrayList<Number> prices = new ArrayList<Number>();
-        ArrayList<Number> times = new ArrayList<Number>();
+        ArrayList<Number> prices = new ArrayList<>();
+        ArrayList<Number> times = new ArrayList<>();
      
         @Override
         public String getTitle() {
@@ -205,16 +225,19 @@ public class Chart extends SimpleSubscriptionListener {
 
         @Override
         public Number getX(int index) {
+            Log.v(TAG,"Extract X");
             return times.get(index);
         }
 
         @Override
         public Number getY(int index) {
+            Log.v(TAG,"Extract Y");
             return prices.get(index);
         }
 
         @Override
         public int size() {
+            Log.v(TAG,"Extract size");
             return prices.size();
         }
         
