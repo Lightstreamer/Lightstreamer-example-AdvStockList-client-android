@@ -4,7 +4,7 @@
 This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://docs.lightstreamer.com/api/ls-android-client/latest/)
 to subscribe to real-time updates.
 
-An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Weswit/Lightstreamer-example-MPNStockList-client-android)
+An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
 
 
 ## Live Demo
@@ -21,7 +21,7 @@ An extended version, including support for GCM push notifications is also availa
 
 ## Details
 
-This is a Java-for-Android version of the [Lightstreamer - Basic Stock-List Demo - HTML client](https://github.com/Weswit/Lightstreamer-example-StockList-client-javascript#basic-stock-list-demo---html-client).<br>
+This is a Java-for-Android version of the [Lightstreamer - Basic Stock-List Demo - HTML client](https://github.com/Lightstreamer/Lightstreamer-example-StockList-client-javascript#basic-stock-list-demo---html-client).<br>
 This app uses the <b>Android Client API for Lightstreamer</b> to handle the communications with Lightstreamer Server. A simple user interface is implemented to display the real-time data received from Lightstreamer Server.<br>
 
 Touch a row opens a new panel with the detailed information, updated in real-time, of the stock.
@@ -48,11 +48,11 @@ Check out the sources for further explanations.
 If you want to install a version of this demo pointing to your local Lightstreamer Server and running into 
 an [Android Virtual Device](http://developer.android.com/tools/devices/emulator.html), follow these steps:
 
-* Note that, as prerequisite, the [Lightstreamer - Stock-List Demo - Java Adapter](https://github.com/Weswit/Lightstreamer-example-Stocklist-adapter-java) 
+* Note that, as prerequisite, the [Lightstreamer - Stock-List Demo - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-Stocklist-adapter-java) 
 has to be deployed on your local Lightstreamer Server instance. Please check out that project and follow the installation 
 instructions provided with it. 
 * Launch Lightstreamer Server.
-* Download the `deploy.zip` file, which you can find in the [deploy release](https://github.com/Weswit/Lightstreamer-example-AdvStockList-client-android/releases) 
+* Download the `deploy.zip` file, which you can find in the [deploy release](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/releases) 
 of this project and extract the `Android_StockListDemo.apk` file.
 * Locate or install the [Android SDK](http://developer.android.com/sdk/index.html)
 * Install the `Android_StockListDemo.apk` in your emulator:
@@ -83,8 +83,8 @@ their dependencies by looking at the provided gradle build files.
 ### Deploy
   
 You may run the demo against your local server or using our online server at http://push.lightstreamer.com:80. The server to which the demo will connect to is configured in the `app/src/main/res/values/strings.xml` file.
-In the former case, the example requires that the [QUOTE_ADAPTER](https://github.com/Weswit/Lightstreamer-example-Stocklist-adapter-java) has to be deployed in your local Lightstreamer server instance;
-the [LiteralBasedProvider](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java) is also needed, but it is already provided by Lightstreamer server.
+In the former case, the example requires that the [QUOTE_ADAPTER](https://github.com/Lightstreamer/Lightstreamer-example-Stocklist-adapter-java) has to be deployed in your local Lightstreamer server instance;
+the [LiteralBasedProvider](https://github.com/Lightstreamer/Lightstreamer-example-ReusableMetadata-adapter-java) is also needed, but it is already provided by Lightstreamer server.
 
 ### Build
 
@@ -100,16 +100,16 @@ You might also use a different build tool (e.g.: Maven, Ivy, etc.) by converting
 
 ### Lightstreamer Adapters Needed by This Demo Client
 
-* [Lightstreamer - Stock-List Demo - Java Adapter](https://github.com/Weswit/Lightstreamer-example-Stocklist-adapter-java)
-* [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java)
+* [Lightstreamer - Stock-List Demo - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-Stocklist-adapter-java)
+* [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-ReusableMetadata-adapter-java)
 
 ### Related Projects
 
-* [Lightstreamer - Stock-List Demos - HTML Clients](https://github.com/Weswit/Lightstreamer-example-Stocklist-client-javascript)
-* [Lightstreamer - Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Weswit/Lightstreamer-example-MPNStockList-client-android)
+* [Lightstreamer - Stock-List Demos - HTML Clients](https://github.com/Lightstreamer/Lightstreamer-example-Stocklist-client-javascript)
+* [Lightstreamer - Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
 
 ## Lightstreamer Compatibility Notes
 
 * Compatible with Lightstreamer Android Client API v. 2.0 or newer.
 * For Lightstreamer Allegro (+ Android Client API support), Presto, Vivace.
-* For a version of this example compatible with Lightstreamer Android Client API version 1.1, please refer to [this tag](https://github.com/Weswit/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-1.x).
+* For a version of this example compatible with Lightstreamer Android Client API version 1.1, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-1.x).
