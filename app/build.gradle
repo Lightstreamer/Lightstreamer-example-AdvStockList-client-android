@@ -26,6 +26,11 @@ android {
             // signingConfig signingConfigs.release
         }
     }
+    packagingOptions {
+        pickFirst 'build.number'
+        pickFirst 'version.number'
+        pickFirst 'compatibility_version.number'        
+    }
 }
 
 dependencies {
