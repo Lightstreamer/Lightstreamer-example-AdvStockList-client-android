@@ -106,7 +106,7 @@ public class StockListDemoApplication extends Application {
 
         @Override
         public void removeListener(ClientListener listener) {
-            lsClient.addListener(listener);
+            lsClient.removeListener(listener);
         }
 
         public String getStatus() {
