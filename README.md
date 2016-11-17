@@ -94,7 +94,7 @@ As an example you can build and install a debug version of the application in an
 gradlew installDebug
 ```
 
-You might also use a different build tool (e.g.: Maven, Ivy, etc.) by converting the provided gradle build files. 
+You might also use a different build tool (e.g.: Maven, Ant, etc.) by converting the provided Gradle build files. 
 
 ## See Also
 

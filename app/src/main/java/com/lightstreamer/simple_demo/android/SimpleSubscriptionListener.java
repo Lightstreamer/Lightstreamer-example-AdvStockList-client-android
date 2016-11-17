@@ -70,4 +70,7 @@ public class SimpleSubscriptionListener implements SubscriptionListener {
         Log.v(TAG,"Unsubscribed");
     }
 
+    public void onRealMaxFrequency(String frequency) {
+        Log.d(TAG, "Frequency is " + frequency);
+    }
 }
