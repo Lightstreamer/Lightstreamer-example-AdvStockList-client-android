@@ -1,7 +1,7 @@
 # Lightstreamer - Stock-List Demo - Android Client
 
 
-This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://docs.lightstreamer.com/api/ls-android-client-compact/latest/)
+This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://docs.lightstreamer.com/api/ls-android-client/latest/)
 to subscribe to real-time updates.
 
 An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
@@ -72,13 +72,7 @@ of this project and extract the `Android_StockListDemo.apk` file.
 
 Note that you can skip this section and build the application without using any IDE. 
 
-You can either open the provided project into [Android Studio](https://developer.android.com/sdk/installing/studio.html) or
-you can import the sources, the resources, the AndroidManifest file and the required 
-dependencies into new [Eclipse](http://www.eclipse.org/) project (provided you installed the necessary [ADT plugin](http://developer.android.com/sdk/eclipse-adt.html)).
-
-In the Eclipse case, you'll need to separately download the [Android SDK](http://developer.android.com/sdk/), configure the project to
-use the [v7 Support Library](https://developer.android.com/tools/support-library/setup.html) and discover the required libraries and 
-their dependencies by looking at the provided gradle build files.
+To open the project in [Android Studio](https://developer.android.com/sdk/installing/studio.html), import the provided files and drop in `app/libs` the library `ls-android-client.jar` from the Lighstreamer SDK for Android Clients.
 
 ### Deploy
   
@@ -94,7 +88,7 @@ As an example you can build and install a debug version of the application in an
 gradlew installDebug
 ```
 
-You might also use a different build tool (e.g.: Maven, Ivy, etc.) by converting the provided gradle build files. 
+You might also use a different build tool (e.g.: Maven, Ant, etc.) by converting the provided Gradle build files.
 
 ## See Also
 
