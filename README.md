@@ -3,7 +3,7 @@
 
 This project contains a full example of an Android application that employs the [Lightstreamer Android Client library](http://docs.lightstreamer.com/api/ls-android-client/latest/) to subscribe to real-time updates.
 
-An extended version, including support for GCM push notifications is also available: [Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
+An extended version, including support for FCM push notifications is also available: [Stock-List Demo with FCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
 
 
 ## Live Demo
@@ -51,7 +51,7 @@ an [Android Virtual Device](http://developer.android.com/tools/devices/emulator.
 has to be deployed on your local Lightstreamer Server instance. Please check out that project and follow the installation 
 instructions provided with it. 
 * Launch Lightstreamer Server.
-* Download the `deploy.zip` file, which you can find in the [deploy release](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/releases) 
+* Download the `deploy.zip` file, which you can find in the latest [deploy release](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/releases) 
 of this project and extract the `Android_StockListDemo.apk` file.
 * Locate or install the [Android SDK](http://developer.android.com/sdk/index.html)
 * Install the `Android_StockListDemo.apk` in your emulator:
@@ -99,12 +99,12 @@ You might also use a different build tool (e.g.: Maven, Ant, etc.) by converting
 ### Related Projects
 
 * [Lightstreamer - Stock-List Demos - HTML Clients](https://github.com/Lightstreamer/Lightstreamer-example-Stocklist-client-javascript)
-* [Lightstreamer - Stock-List Demo with GCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
+* [Lightstreamer - Stock-List Demo with FCM Push Notifications - Android Client](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-android)
 
 ## Lightstreamer Compatibility Notes
 
 * Compatible with Lightstreamer Android Client API v. 3.0 or newer.
 * For Lightstreamer Allegro (+ Android Client API support), Presto, Vivace.
 * For a version of this example compatible with Lightstreamer Android Client API version 2, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-2).
-* For a version of this example compatible with Lightstreamer Android Client API version 1.1, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-1.x).
+* For a version of this example compatible with Lightstreamer Android Client API version 1.x, please refer to [this branch](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/for-client-1).
 
