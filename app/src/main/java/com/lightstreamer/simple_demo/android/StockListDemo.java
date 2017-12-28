@@ -288,7 +288,7 @@ public class StockListDemo extends AppCompatActivity implements
 
                 case "DISCONNECTED":
                     applyStatus(R.drawable.status_disconnected,R.string.status_disconnected);
-                    break;     
+                    break;
                 case "DISCONNECTED:WILL-RETRY":
                     applyStatus(R.drawable.status_disconnected,R.string.status_waiting);
                     break;
@@ -307,12 +307,15 @@ public class StockListDemo extends AppCompatActivity implements
                     applyStatus(R.drawable.status_connected_polling,R.string.status_ws_polling);
                     break;
                     
+                case "DISCONNECTED:TRYING-RECOVERY":
+                    applyStatus(R.drawable.status_stalled,R.string.status_stalled);
+                    break;
                 case "STALLED":
                     applyStatus(R.drawable.status_stalled,R.string.status_stalled);
                     break;
                 
                 default: 
-                    Log.wtf(TAG, "Recevied unexpected connection status: " + status);
+                    Log.wtf(TAG, "Received unexpected connection status: " + status);
                     return;
                 
             }
