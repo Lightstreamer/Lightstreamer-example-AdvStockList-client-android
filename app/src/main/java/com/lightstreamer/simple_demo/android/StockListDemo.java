@@ -275,7 +275,7 @@ public class StockListDemo extends AppCompatActivity implements
         @Override
         public void run() {
             
-            
+            Log.i(TAG, "Client status: " + status);
             switch(status) {
             
                 case "CONNECTING":

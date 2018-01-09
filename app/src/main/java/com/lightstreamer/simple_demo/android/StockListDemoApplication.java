@@ -21,6 +21,7 @@ import android.app.Application;
 import com.lightstreamer.client.ClientListener;
 import com.lightstreamer.client.LightstreamerClient;
 import com.lightstreamer.client.Subscription;
+import com.lightstreamer.log.system_out.SystemOutLogProvider;
 
 public class StockListDemoApplication extends Application {
 
@@ -29,6 +30,10 @@ public class StockListDemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // comment the following two lines if the log is too verbose
+        SystemOutLogProvider prov = new SystemOutLogProvider();
+        LightstreamerClient.setLoggerProvider(prov);
 
         client = new ClientProxy(); //expose the instance
     }
