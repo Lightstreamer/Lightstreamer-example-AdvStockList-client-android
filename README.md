@@ -104,7 +104,7 @@ You might also use a different build tool (e.g.: Maven, Ant, etc.) by converting
 ## Lightstreamer Compatibility Notes
 
 * Compatible with Lightstreamer Android Client API v. 3.0 or newer.
-* For Lightstreamer Allegro (+ Android Client API support), Presto, Vivace.
+* Ensure that Android Client API is supported by Lightstreamer Server license configuration.
 * For a version of this example compatible with Lightstreamer Android Client API version 2, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/latest-for-client-2).
 * For a version of this example compatible with Lightstreamer Android Client API version 1.x, please refer to [this branch](https://github.com/Lightstreamer/Lightstreamer-example-AdvStockList-client-android/tree/for-client-1).
 
