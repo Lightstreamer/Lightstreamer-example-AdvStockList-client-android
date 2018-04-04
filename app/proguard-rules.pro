@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# The rules below are needed because both LS SDK library and netty library
+# use java reflection
+
+-keep class io.netty.** { *; }
+-dontwarn io.netty.**
+
+-keep class com.lightstreamer.** { *; }
+-dontwarn com.lightstreamer.**
