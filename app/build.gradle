@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.lightstreamer.simple_demo.android"
         minSdkVersion 10
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 13
         versionName "2.1.0"
     }
