@@ -14,7 +14,7 @@ An extended version, including support for FCM push notifications is also availa
 
 ![QR](qrcode.png)
 
-### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://play.google.com/store/apps/details?id=com.lightstreamer.simple_demo.android)
+### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://play.google.com/store/apps/details?id=com.lightstreamer.push_demo.android.fcm)
 (To install the app from the Google Play Store, you can also use the above QR code)
 
 
