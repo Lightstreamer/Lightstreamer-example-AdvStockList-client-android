@@ -226,13 +226,11 @@ public class StockListDemo extends AppCompatActivity implements
     public class LSClientListener implements ClientListener {
 
         @Override
-        public void onListenEnd(com.lightstreamer.client.LightstreamerClient arg0) {
+        public void onListenEnd() {
         }
 
         @Override
-        public void onListenStart(com.lightstreamer.client.LightstreamerClient client) {
-            this.onStatusChange(client.getStatus());
-            
+        public void onListenStart() {
         }
 
         @Override

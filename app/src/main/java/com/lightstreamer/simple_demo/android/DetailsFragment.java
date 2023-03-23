@@ -149,7 +149,8 @@ public class DetailsFragment extends Fragment {
             this.currentSubscription = new Subscription("MERGE",itemName,subscriptionFields);
             currentSubscription.setDataAdapter("QUOTE_ADAPTER");
             this.currentSubscription.setRequestedSnapshot("yes");
-            
+
+            stockListener.setSubscription(this.currentSubscription);
             this.currentSubscription.addListener(stockListener);
             this.currentSubscription.addListener(chart);
             

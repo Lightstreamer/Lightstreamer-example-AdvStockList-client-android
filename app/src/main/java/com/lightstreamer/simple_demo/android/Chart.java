@@ -96,8 +96,8 @@ public class Chart extends SimpleSubscriptionListener {
     }
     
     @Override
-    public void onListenStart(Subscription sub) {
-        super.onListenStart(sub);
+    public void onListenStart() {
+        super.onListenStart();
         this.clean(); 
     }
     

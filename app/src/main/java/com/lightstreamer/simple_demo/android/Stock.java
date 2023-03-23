@@ -40,7 +40,7 @@ public class Stock extends SimpleSubscriptionListener {
     Set<String> numericField;
     
     private Handler handler;
-    private Subscription sub;
+    volatile private Subscription sub;
 
     
     public Stock(Set<String> numericFields, String[] fields, Handler handler, HashMap<String,TextView> holder) {
@@ -52,18 +52,21 @@ public class Stock extends SimpleSubscriptionListener {
         this.handler = handler;
         this.holder = holder;
     }
+
+    public void setSubscription(Subscription sub) {
+        this.sub = sub;
+    }
     
     @Override
-    public void onListenStart(Subscription sub) {
-    	super.onListenStart(sub);
-    	this.sub = sub;
-    	
+    public void onListenStart() {
+    	super.onListenStart();
+
     	handler.post(new ResetRunnable());
     }
     
     @Override
-    public void onListenEnd(Subscription sub) {
-    	super.onListenEnd(sub);
+    public void onListenEnd() {
+    	super.onListenEnd();
     	this.sub = null;
     }
     

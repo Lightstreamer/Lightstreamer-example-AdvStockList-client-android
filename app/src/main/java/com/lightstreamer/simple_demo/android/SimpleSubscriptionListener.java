@@ -46,12 +46,12 @@ public class SimpleSubscriptionListener implements SubscriptionListener {
     }
 
     @Override
-    public void onListenEnd(Subscription arg0) {
+    public void onListenEnd() {
          Log.d(TAG,"Start listening");
     }
 
     @Override
-    public void onListenStart(Subscription arg0) {
+    public void onListenStart() {
         Log.d(TAG,"Stop listening");
     }
 
