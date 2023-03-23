@@ -23,9 +23,10 @@ import android.util.Log;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.StepMode;
 import com.lightstreamer.client.ItemUpdate;
 import com.lightstreamer.client.Subscription;
 
@@ -63,20 +64,20 @@ public class Chart extends SimpleSubscriptionListener {
     private void setPlot(final XYPlot dynamicPlot) {
         if (this.dynamicPlot != dynamicPlot) {
             this.dynamicPlot = dynamicPlot;
-            dynamicPlot.setDomainStep(XYStepMode.SUBDIVIDE, 4);
-            dynamicPlot.setRangeStep(XYStepMode.SUBDIVIDE, 5);
-            dynamicPlot.getLegendWidget().setVisible(false);
+            dynamicPlot.setDomainStep(StepMode.SUBDIVIDE, 4);
+            dynamicPlot.setRangeStep(StepMode.SUBDIVIDE, 5);
+            dynamicPlot.getLegend().setVisible(false);
             
             dynamicPlot.getBackgroundPaint().setColor(Color.BLACK);
-            dynamicPlot.getGraphWidget().getBackgroundPaint().setColor(Color.BLACK);
-            dynamicPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.BLACK);
+            dynamicPlot.getGraph().getBackgroundPaint().setColor(Color.BLACK);
+            dynamicPlot.getGraph().getGridBackgroundPaint().setColor(Color.BLACK);
             
-            dynamicPlot.getGraphWidget().getDomainLabelPaint().setColor(Color.WHITE);
-            dynamicPlot.getGraphWidget().getRangeLabelPaint().setColor(Color.WHITE);
+            dynamicPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).getPaint().setColor(Color.WHITE);
+            dynamicPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).getPaint().setColor(Color.WHITE);
 
             dynamicPlot.setRangeBoundaries(minY, maxY, BoundaryMode.FIXED);
             
-            dynamicPlot.setDomainValueFormat(new FormatDateLabel());
+            dynamicPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new FormatDateLabel());
         }
     }
 
