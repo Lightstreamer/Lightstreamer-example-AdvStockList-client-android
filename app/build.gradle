@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.lightstreamer.simple_demo.android"
         minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 13
+        targetSdkVersion 33
+        versionCode 18
         versionName "2.1.0"
     }
     /*signingConfigs {
@@ -36,6 +35,10 @@ android {
         pickFirst 'compatibility_version.number'
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/io.netty.versions.properties'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

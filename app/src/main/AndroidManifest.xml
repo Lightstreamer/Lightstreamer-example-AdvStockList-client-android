@@ -3,11 +3,6 @@
     android:versionCode="10"
     android:versionName="2.0" >
 
-    <!-- The targetSdkVersion is optional, but it's always a good practice
-         to target higher versions. -->
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="26" />
     <!--  who does not need internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
        
