@@ -10,8 +10,6 @@ An extended version, including support for FCM push notifications is also availa
 
 [![screenshot](screen_android_large.png)](https://play.google.com/store/apps/details?id=com.lightstreamer.simple_demo.android)
  
-[![tablet screenshot](screen_android_tablet.png)](https://play.google.com/store/apps/details?id=com.lightstreamer.simple_demo.android)
-
 ![QR](qrcode.png)
 
 ### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://play.google.com/store/apps/details?id=com.lightstreamer.push_demo.android.fcm)
